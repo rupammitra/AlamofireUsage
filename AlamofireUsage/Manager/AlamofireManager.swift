@@ -180,4 +180,54 @@ class AlamofireManager: SessionManager {
             }
         }
     }
+    
+    func putRequest(forEndpoint endpoint: String?, withHeaders headers: [String: String]?, forParameters parameters: [String: AnyObject]?, withSuccess success:@escaping (_ response: Any?) -> (), andFailure failure:@escaping (_ error: Error?) -> ()) {
+        
+        if headers != nil {
+            header += headers!
+        }
+        
+        let url: String?
+        if endpoint != nil {
+            url = baseURL + endpoint!
+        }else {
+            url = baseURL
+        }
+        
+        AlamofireManager.manager.request(url!, method: .put, parameters: parameters, encoding: parameterEncoding, headers: header).validate().responseJSON { (response) in
+            guard response.result.isSuccess else {
+                failure(response.result.error)
+                return
+            }
+            
+            if let value = response.result.value {
+                success(value)
+            }
+        }
+    }
+    
+    func deleteRequest(forEndpoint endpoint: String?, withHeaders headers: [String: String]?, forParameters parameters: [String: AnyObject]?, withSuccess success:@escaping (_ response: Any?) -> (), andFailure failure:@escaping (_ error: Error?) -> ()) {
+        
+        if headers != nil {
+            header += headers!
+        }
+        
+        let url: String?
+        if endpoint != nil {
+            url = baseURL + endpoint!
+        }else {
+            url = baseURL
+        }
+        
+        AlamofireManager.manager.request(url!, method: .delete, parameters: parameters, encoding: parameterEncoding, headers: header).validate().responseJSON { (response) in
+            guard response.result.isSuccess else {
+                failure(response.result.error)
+                return
+            }
+            
+            if let value = response.result.value {
+                success(value)
+            }
+        }
+    }
 }
